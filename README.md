@@ -1,6 +1,5 @@
 # Contact and Human Dynamics from Monocular Video
-
-This is the official implementation for the ECCV 2020 spotlight paper. For more information, see the [project webpage](https://geometry.stanford.edu/projects/human-dynamics-eccv-2020/).
+This is the official implementation for the ECCV 2020 spotlight paper by Davis Rempe, Leonidas J. Guibas, Aaron Hertzmann, Bryan Russell, Ruben Villegas, and Jimei Yang. For more information, see the [project webpage](https://geometry.stanford.edu/projects/human-dynamics-eccv-2020/).
 
 ![Teaser](teaser.png)
 
