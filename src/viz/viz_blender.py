@@ -874,7 +874,6 @@ if __name__=='__main__':
     argv = sys.argv
     args = parse_args(sys.argv[argv.index('--') + 1:])
 
-    # TODO add options for camera angle and stuff that I was messing with by hand.
     cam_params = (args.width, args.height, args.cam_f)
     render_multiview_eval(args.results, args.character, args.fbx, args.scene, args.texture, 
                         args.out, args.fps, True, kinematic_result=args.kinematic_result, draw_com=args.draw_com, 
