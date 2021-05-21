@@ -1,6 +1,6 @@
 external
 output
-data
+./data/*
 pretrained_weights/*.pth
 *__pycache__*
 towr_phys_optim/build*
