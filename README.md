@@ -3,6 +3,9 @@ This is the official implementation for the ECCV 2020 spotlight paper by Davis R
 
 ![Teaser](teaser.png)
 
+## News
+* (10/09/2021) [Code for our new paper HuMoR](https://github.com/davrempe/humor) (3D **Hu**man **Mo**tion Model for **R**obust Pose Estimation) has been released!
+
 ## Environment Setup
 > Note: the code in this repo has only been tested on Ubuntu 16.04.
 
