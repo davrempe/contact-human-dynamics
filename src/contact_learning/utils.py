@@ -1,5 +1,6 @@
 import os, sys
 from copy import copy
+from pathlib import Path
 import shutil, subprocess
 
 import numpy as np
@@ -190,6 +191,39 @@ def plot_train_stats(train_progress, val_progress, out_dir, accuracy_metrics=Non
     # plot confusion matrix
     accuracy, precision, recall, f1, cm = accuracy_metrics
     plot_confusion_mat(cm, os.path.join(out_dir, 'train_confusion_matrix.png'))
+
+def viz_video_opencv(frame_seq, joint2d_seq, contact_preds, contact_labels, show=False, save_path=None, fps=30):
+    '''
+    Visualize video and contacts by opencv
+    '''
+    lheel_joints = [openpose_dataset.OP_LOWER_JOINTS_MAP['LHeel'], openpose_dataset.OP_LOWER_JOINTS_MAP['LAnkle']]
+    ltoe_joints = [openpose_dataset.OP_LOWER_JOINTS_MAP['LBigToe'], openpose_dataset.OP_LOWER_JOINTS_MAP['LSmallToe']]
+    rheel_joints = [openpose_dataset.OP_LOWER_JOINTS_MAP['RHeel'], openpose_dataset.OP_LOWER_JOINTS_MAP['RAnkle']]
+    rtoe_joints = [openpose_dataset.OP_LOWER_JOINTS_MAP['RBigToe'], openpose_dataset.OP_LOWER_JOINTS_MAP['RSmallToe']]
+    vis_joints = lheel_joints + ltoe_joints +  rheel_joints +  rtoe_joints
+
+    # mp4v cannot render in webpage, convert to h264 later
+    fourcc = cv2.VideoWriter_fourcc(*"mp4v")
+    frame_height, frame_width = frame_seq.shape[1:3]
+    temp_path = str(Path(save_path).with_name(Path(save_path).stem + "_temp.mp4"))
+    out = cv2.VideoWriter(temp_path, fourcc, fps, (frame_width, frame_height))
+    # convert to cv2
+    frame_seq = (frame_seq*255).astype(np.uint8)
+    frame_seq = frame_seq[:, :, :, ::-1].copy()
+
+    frame_idx = 0
+    while frame_idx < frame_seq.shape[0]:
+        frame = frame_seq[frame_idx]
+        for idx, joint in enumerate(vis_joints):
+            joint_pos = joint2d_seq[frame_idx, joint].astype(int)
+            if contact_preds[frame_idx, idx//2] == 1:
+                cv2.circle(frame, (joint_pos[0], joint_pos[1]), 3, (0, 0, 255), -1)
+            else:
+                cv2.circle(frame, (joint_pos[0], joint_pos[1]), 3, (0, 255, 0), -1)
+        out.write(frame)
+        frame_idx += 1
+    out.release()
+    subprocess.run(f"ffmpeg -i {temp_path} -vcodec libx264 -f mp4 {save_path}", shell=True)
 
 def viz_full_video_simple(frame_seq, joint2d_seq, contact_preds, contact_labels, show=False, save_path=None, fps=30):
     '''
